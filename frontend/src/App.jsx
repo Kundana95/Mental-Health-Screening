@@ -3,6 +3,7 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
 import DepressionAssessment from './pages/DepressionAssessment.jsx';
+import SchizophreniaAssessment from './pages/SchizophreniaAssessment.jsx';
 import ModulePlaceholder from './pages/ModulePlaceholder.jsx';
 
 function currentPath() {
@@ -36,6 +37,8 @@ export default function App() {
         <HomePage />
       ) : path === '/depression' ? (
         <DepressionAssessment />
+      ) : path === '/schizophrenia' ? (
+        <SchizophreniaAssessment />
       ) : (
         <ModulePlaceholder slug={slug} />
       )}

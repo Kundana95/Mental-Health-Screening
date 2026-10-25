@@ -38,6 +38,8 @@ pnpm-debug.log*
 *.temp
 
 # Datasets, local databases, and archives
+/local_models/
+/modules/sctizo.ipynb
 /data/
 /datasets/
 *.csv

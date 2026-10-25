@@ -26,9 +26,9 @@ export const screenings = [
   {
     slug: 'schizophrenia',
     eyebrow: 'IN YOUR OWN WORDS',
-    title: 'Schizophrenia Screening',
-    description: 'A gentle space to write about your experiences, using a text-based approach.',
-    detail: 'Text entry · Interface preview',
+    title: 'Schizophrenia-related Text',
+    description: 'Explore an experimental Reddit text classifier. This is not a clinical assessment or diagnosis.',
+    detail: 'Text entry · Experimental classifier',
     tone: 'sage',
   },
 ];
