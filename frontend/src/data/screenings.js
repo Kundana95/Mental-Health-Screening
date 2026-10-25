@@ -11,8 +11,8 @@ export const screenings = [
     slug: 'anxiety',
     eyebrow: 'THE STUDENT EXPERIENCE',
     title: 'Anxiety Screening',
-    description: 'A student-focused pathway, with academic inputs awaiting dataset confirmation.',
-    detail: 'Student dataset · Input layout preview',
+    description: 'Reflect on academic experiences with an experimental screening estimate based on a trained model.',
+    detail: '7 questionnaire items · Experimental model',
     tone: 'peach',
   },
   {

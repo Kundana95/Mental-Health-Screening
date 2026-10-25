@@ -189,6 +189,7 @@ class TestDepressionAssessmentApi(unittest.TestCase):
                 "/api/depression/submit",
                 "/api/schizophrenia/analyze",
                 "/api/bipolar/analyze",
+                "/api/anxiety/analyze",
             ],
         )
 

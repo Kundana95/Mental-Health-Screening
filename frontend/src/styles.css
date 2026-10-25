@@ -173,6 +173,11 @@ h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; c
 .depression-result-card p:last-child { margin: 8px 0 0; color: #687971; font-size: 13px; }
 .depression-result-card__score { margin: 0; color: #304e3e; font-size: 34px; font-weight: 700; line-height: 1.2; }
 .depression-result-card__score span { color: #849087; font-size: 17px; font-weight: 500; }
+.anxiety-notice { max-width: 980px; margin-inline: auto; }
+.anxiety-result { margin-top: 26px; padding: 26px; border: 1px solid #efd9c9; border-radius: 18px; background: #fff8f1; }
+.anxiety-result .eyebrow { margin-bottom: 8px; color: #89634f; }
+.anxiety-result h2 { margin: 0 0 10px; color: #594639; font-size: clamp(25px, 4vw, 34px); }
+.anxiety-result p:last-child { max-width: 700px; margin: 0; color: #6d5c50; font-size: 13px; line-height: 1.65; }
 
 @media (max-width: 850px) {
   .container, .site-header__inner { width: min(100% - 52px, var(--content)); }

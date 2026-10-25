@@ -12,6 +12,7 @@ from modules.assessment_result import (
 )
 from modules.schizophrenia.api import router as schizophrenia_router
 from modules.bipolar.api import router as bipolar_router
+from modules.anxiety.api import router as anxiety_router
 
 
 class DepressionAssessmentRequest(BaseModel):
@@ -80,6 +81,11 @@ async def safe_validation_error(request: Request, error: RequestValidationError)
             status_code=422,
             content={"detail": "Invalid bipolar screening submission. Please review all responses."},
         )
+    if request.url.path == "/api/anxiety/analyze":
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Invalid anxiety screening submission. Provide exactly seven integer responses from 0 to 3."},
+        )
     return JSONResponse(
         status_code=422,
         content={"detail": "Invalid assessment submission. Please review your answers."},
@@ -144,3 +150,4 @@ def submit_depression_assessment(payload: DepressionAssessmentRequest):
 
 app.include_router(schizophrenia_router)
 app.include_router(bipolar_router)
+app.include_router(anxiety_router)
