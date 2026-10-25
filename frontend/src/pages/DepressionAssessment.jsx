@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { submitDepressionAssessment } from '../lib/depression.js';
 
 const phq9Questions = [
   'Little interest or pleasure in doing things',
@@ -74,6 +75,7 @@ export default function DepressionAssessment() {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showSafetyGuidance, setShowSafetyGuidance] = useState(false);
+  const [results, setResults] = useState(null);
   const requestInFlight = useRef(false);
 
   const isComplete =
@@ -86,6 +88,7 @@ export default function DepressionAssessment() {
     setError('');
     setSubmitted(false);
     setShowSafetyGuidance(false);
+    setResults(null);
   }
 
   function updateContext(key, answer) {
@@ -93,6 +96,7 @@ export default function DepressionAssessment() {
     setError('');
     setSubmitted(false);
     setShowSafetyGuidance(false);
+    setResults(null);
   }
 
   async function handleSubmit(event) {
@@ -103,22 +107,22 @@ export default function DepressionAssessment() {
     setIsSubmitting(true);
     setError('');
     setSubmitted(false);
+    setResults(null);
     try {
-      const response = await fetch('/api/depression/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phq9_responses: phq9Responses, gad7_responses: gad7Responses, context_answers: contextAnswers }),
+      const screeningResults = await submitDepressionAssessment({
+        phq9_responses: phq9Responses,
+        gad7_responses: gad7Responses,
+        context_answers: contextAnswers,
       });
-      if (!response.ok) {
-        setError(response.status === 422
-          ? 'Some answers could not be validated. Please review the questions and try again.'
-          : 'We couldn’t submit your answers. Please try again in a moment.');
-        return;
-      }
+      setResults(screeningResults);
       setSubmitted(true);
       setShowSafetyGuidance(phq9Responses[8] > 0);
-    } catch {
-      setError('We couldn’t reach the assessment service. Please try again in a moment.');
+    } catch (failure) {
+      setError(failure.kind === 'validation'
+        ? 'Some answers could not be validated. Please review the questions and try again.'
+        : failure.kind === 'response'
+          ? 'We couldn’t read the screening results. Please try again in a moment.'
+          : 'We couldn’t reach the assessment service. Please try again in a moment.');
     } finally {
       requestInFlight.current = false;
       setIsSubmitting(false);
@@ -191,6 +195,24 @@ export default function DepressionAssessment() {
 
       {error && <p className="assessment-message assessment-message--error" role="alert">{error}</p>}
       {submitted && <p className="assessment-message assessment-message--success" role="status">Your responses were received.</p>}
+      {submitted && results && (
+        <section className="depression-results" aria-labelledby="depression-results-heading">
+          <h2 id="depression-results-heading">Screening results</h2>
+          <p className="depression-results__note">These are screening results, not a clinical diagnosis.</p>
+          <div className="depression-results__grid">
+            <article className="depression-result-card">
+              <h3>PHQ-9</h3>
+              <p className="depression-result-card__score">{results['PHQ-9'].total_score}<span> / 27</span></p>
+              <p>Interpretation: <strong>{results['PHQ-9'].severity}</strong></p>
+            </article>
+            <article className="depression-result-card">
+              <h3>GAD-7</h3>
+              <p className="depression-result-card__score">{results['GAD-7'].total_score}<span> / 21</span></p>
+              <p>Interpretation: <strong>{results['GAD-7'].severity}</strong></p>
+            </article>
+          </div>
+        </section>
+      )}
       {submitted && showSafetyGuidance && (
         <aside className="assessment-message assessment-message--safety" role="alert">
           <h2>Support is available</h2>

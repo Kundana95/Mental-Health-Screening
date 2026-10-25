@@ -4,6 +4,7 @@ import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
 import DepressionAssessment from './pages/DepressionAssessment.jsx';
 import SchizophreniaAssessment from './pages/SchizophreniaAssessment.jsx';
+import BipolarAssessment from './pages/BipolarAssessment.jsx';
 import ModulePlaceholder from './pages/ModulePlaceholder.jsx';
 
 function currentPath() {
@@ -39,6 +40,8 @@ export default function App() {
         <DepressionAssessment />
       ) : path === '/schizophrenia' ? (
         <SchizophreniaAssessment />
+      ) : path === '/bipolar' ? (
+        <BipolarAssessment />
       ) : (
         <ModulePlaceholder slug={slug} />
       )}

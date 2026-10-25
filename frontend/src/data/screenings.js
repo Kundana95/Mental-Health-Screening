@@ -19,8 +19,8 @@ export const screenings = [
     slug: 'bipolar',
     eyebrow: 'A DIFFERENT PERSPECTIVE',
     title: 'Bipolar Disorder Screening',
-    description: 'A dedicated pathway with input fields to be defined by the project dataset.',
-    detail: 'Separate dataset · Input layout preview',
+    description: 'Explore an experimental screening prototype built from a small research dataset.',
+    detail: '10 model inputs · Experimental prototype',
     tone: 'blue',
   },
   {

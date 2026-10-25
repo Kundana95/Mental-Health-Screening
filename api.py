@@ -11,6 +11,7 @@ from modules.assessment_result import (
     validate_unified_assessment_submission,
 )
 from modules.schizophrenia.api import router as schizophrenia_router
+from modules.bipolar.api import router as bipolar_router
 
 
 class DepressionAssessmentRequest(BaseModel):
@@ -74,6 +75,11 @@ async def safe_validation_error(request: Request, error: RequestValidationError)
             status_code=422,
             content={"detail": "Invalid text submission. Provide non-empty text of at most 4000 characters."},
         )
+    if request.url.path == "/api/bipolar/analyze":
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Invalid bipolar screening submission. Please review all responses."},
+        )
     return JSONResponse(
         status_code=422,
         content={"detail": "Invalid assessment submission. Please review your answers."},
@@ -82,7 +88,7 @@ async def safe_validation_error(request: Request, error: RequestValidationError)
 
 @app.post("/api/depression/submit")
 def submit_depression_assessment(payload: DepressionAssessmentRequest):
-    """Validate and process the assessment, returning only a neutral receipt."""
+    """Validate the assessment and return only its two screening summaries."""
     try:
         validate_unified_assessment_submission(
             payload.phq9_responses,
@@ -105,6 +111,22 @@ def submit_depression_assessment(payload: DepressionAssessmentRequest):
             payload.gad7_responses,
             payload.context_answers,
         )
+        questionnaire_results = {}
+        for questionnaire_id in ("PHQ-9", "GAD-7"):
+            questionnaire = assessment_result["questionnaire_results"][questionnaire_id]
+            total_score = questionnaire["total_score"]
+            severity = questionnaire["severity"]
+            if (
+                questionnaire["completion_status"] != "complete"
+                or isinstance(total_score, bool)
+                or not isinstance(total_score, int)
+                or not isinstance(severity, str)
+            ):
+                raise ValueError("The completed result was incomplete.")
+            questionnaire_results[questionnaire_id] = {
+                "total_score": total_score,
+                "severity": severity,
+            }
     except Exception:
         # Do not let an unexpected exception include request data in the HTTP
         # response or escape to default traceback logging.
@@ -113,7 +135,12 @@ def submit_depression_assessment(payload: DepressionAssessmentRequest):
             detail="The assessment could not be processed. Please try again.",
         ) from None
 
-    return {"status": "received", "message": "Your responses were received."}
+    return {
+        "status": "received",
+        "message": "Your responses were received.",
+        "questionnaire_results": questionnaire_results,
+    }
 
 
 app.include_router(schizophrenia_router)
+app.include_router(bipolar_router)

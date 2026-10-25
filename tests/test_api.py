@@ -41,17 +41,36 @@ class TestDepressionAssessmentApi(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         result = response.json()
-        self.assertEqual(result, {
-            "status": "received",
-            "message": "Your responses were received.",
-        })
         builder.assert_called_once_with(
             payload["phq9_responses"],
             payload["gad7_responses"],
             payload["context_answers"],
         )
+        expected_assessment = build_unified_assessment_result(
+            payload["phq9_responses"],
+            payload["gad7_responses"],
+            payload["context_answers"],
+        )
+        self.assertEqual(result["status"], "received")
+        self.assertEqual(result["message"], "Your responses were received.")
+        self.assertEqual(result["questionnaire_results"], {
+            questionnaire_id: {
+                "total_score": expected_assessment["questionnaire_results"][questionnaire_id]["total_score"],
+                "severity": expected_assessment["questionnaire_results"][questionnaire_id]["severity"],
+            }
+            for questionnaire_id in ("PHQ-9", "GAD-7")
+        })
+        self.assertEqual(result["questionnaire_results"]["PHQ-9"], {
+            "total_score": 7,
+            "severity": "Mild",
+        })
+        self.assertEqual(result["questionnaire_results"]["GAD-7"], {
+            "total_score": 5,
+            "severity": "Mild",
+        })
         self.assertNotIn("responses", result)
-        self.assertNotIn("total_score", result)
+        self.assertNotIn("context", result)
+        self.assertNotIn("safety_flags", result)
         self.assertNotIn("Prefer not to say", response.text)
 
     def test_incomplete_submission_is_rejected(self):
@@ -164,7 +183,14 @@ class TestDepressionAssessmentApi(unittest.TestCase):
 
     def test_only_the_expected_routes_are_exposed(self):
         paths = list(app.openapi()["paths"])
-        self.assertEqual(paths, ["/api/depression/submit", "/api/schizophrenia/analyze"])
+        self.assertEqual(
+            paths,
+            [
+                "/api/depression/submit",
+                "/api/schizophrenia/analyze",
+                "/api/bipolar/analyze",
+            ],
+        )
 
     def test_untrusted_host_is_rejected(self):
         response = self.client.get(
