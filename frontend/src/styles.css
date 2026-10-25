@@ -242,6 +242,73 @@ h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; c
   .assessment-submit-note { font-size: 10px; }
 }
 
+.text-classifier-page { min-height: calc(100vh - 220px); padding-block: 28px 64px; }
+.text-classifier-back { display: inline-block; margin-bottom: 26px; color: #4a7366; font-size: 12px; font-weight: 600; text-decoration: none; }
+.text-classifier-back:hover, .text-classifier-resource:hover { text-decoration: underline; }
+.text-classifier-heading { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-bottom: 32px; padding: 36px; border-radius: 26px; background: #e4efe7; }
+.text-classifier-heading h1 { max-width: 780px; margin-bottom: 16px; font-size: clamp(34px, 4vw, 52px); line-height: 1.12; }
+.text-classifier-heading > div > p:not(.eyebrow) { max-width: 740px; color: #567167; font-size: 15px; line-height: 1.65; }
+.text-classifier-heading .pill { background: #fffefa; color: #4d7263; }
+.text-classifier-layout { display: grid; grid-template-columns: minmax(0, 1fr) 270px; align-items: start; gap: 28px; }
+.text-classifier-main { min-width: 0; }
+.text-classifier-notice { margin-bottom: 22px; padding: 21px 24px; border-radius: 12px; background: #e8f1e9; }
+.text-classifier-notice h2 { margin-bottom: 8px; font: 600 14px/1.5 'Avenir Next', Avenir, 'Segoe UI', sans-serif; letter-spacing: 0; }
+.text-classifier-notice p { margin: 0; color: #5c7469; font-size: 13px; line-height: 1.65; }
+.text-classifier-form { padding: 28px; }
+.text-classifier-form h2 { margin-bottom: 16px; font-size: clamp(26px, 3vw, 34px); line-height: 1.2; }
+.text-classifier-intro { color: #667c72; font-size: 14px; line-height: 1.65; }
+.text-classifier-form label { display: block; margin: 20px 0 12px; color: #3e5851; font-size: 14px; font-weight: 600; }
+.text-classifier-form textarea { display: block; width: 100%; min-height: 240px; padding: 16px; resize: vertical; border: 1px solid #d5dfd5; border-radius: 10px; background: #fffefa; color: var(--ink); font: inherit; font-size: 15px; line-height: 1.7; }
+.text-classifier-form textarea::placeholder { color: #74857b; }
+.text-classifier-form textarea:focus-visible, .text-classifier-result:focus-visible { outline: 3px solid #7d9c8e; outline-offset: 3px; }
+.text-classifier-form textarea[aria-invalid="true"] { border-color: #a5654f; }
+.text-classifier-form textarea:disabled { background: #f4f5ef; color: #65766c; }
+.text-character-count { margin: 12px 0 20px; color: #667c72; font-size: 12px; }
+.text-character-count--invalid { color: #92563e; }
+.text-classifier-privacy { padding: 19px; border-radius: 11px; background: #f0f3ec; }
+.text-classifier-privacy h3, .text-classifier-limitation h3, .text-classifier-reminder h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.text-classifier-privacy p { margin: 0; color: #5e7468; font-size: 12px; line-height: 1.7; }
+.text-classifier-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
+.text-classifier-actions .button { cursor: pointer; }
+.text-classifier-actions .button:disabled { transform: none; box-shadow: none; cursor: not-allowed; opacity: .65; }
+.text-classifier-progress { margin: 16px 0 0; color: #4c6e5f; font-size: 13px; line-height: 1.6; }
+.text-classifier-page .assessment-message h2 { margin-bottom: 7px; font: 600 16px/1.5 'Avenir Next', Avenir, 'Segoe UI', sans-serif; letter-spacing: 0; color: inherit; }
+.text-classifier-page .assessment-message p { margin: 0; }
+.text-classifier-result { margin-top: 24px; padding: 28px; border: 1px dashed #cfdcd0; border-radius: 21px; background: #fffefa; scroll-margin-top: 24px; }
+.text-classifier-result h2 { margin-bottom: 15px; font-size: 28px; }
+.text-classifier-result p:not(.eyebrow) { color: #62776c; font-size: 14px; line-height: 1.7; }
+.text-classifier-result > p:last-child { margin-bottom: 0; }
+.text-classifier-result--ready { border-style: solid; }
+.text-classifier-result .text-classifier-category { margin: 0 0 18px; padding: 16px 18px; border-radius: 11px; background: #e8f1e9; color: #34584a; font-size: 17px; font-weight: 600; line-height: 1.6; }
+.text-classifier-limitation { margin: 20px 0; padding: 18px; border-radius: 11px; background: #faeee3; }
+.text-classifier-limitation p { margin: 0; }
+.text-classifier-reminder { padding: 26px; border-radius: 21px; background: #f0f3ec; }
+.text-classifier-reminder h2 { margin-bottom: 20px; font-size: 28px; }
+.text-classifier-reminder p:not(.eyebrow) { color: #62776c; font-size: 13px; line-height: 1.7; }
+.text-classifier-reminder hr { margin: 22px 0; border: 0; border-top: 1px solid #dfe5dd; }
+.text-classifier-resource { display: inline-block; margin-top: 8px; color: #426b5b; font-size: 12px; font-weight: 600; line-height: 1.6; text-decoration: none; }
+
+@media (max-width: 850px) {
+  .text-classifier-heading { padding: 28px; }
+  .text-classifier-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .text-classifier-reminder { max-width: none; }
+}
+
+@media (max-width: 580px) {
+  .text-classifier-page { padding-block: 22px 42px; }
+  .text-classifier-back { margin-bottom: 20px; }
+  .text-classifier-heading { gap: 0; padding: 25px 21px; margin-bottom: 22px; border-radius: 21px; }
+  .text-classifier-heading .abstract-art { display: none; }
+  .text-classifier-heading h1 { font-size: 34px; overflow-wrap: anywhere; }
+  .text-classifier-heading > div > p:not(.eyebrow) { font-size: 13px; }
+  .text-classifier-form, .text-classifier-result, .text-classifier-reminder { padding: 21px; }
+  .text-classifier-notice { padding: 18px; }
+  .text-classifier-form textarea { min-height: 220px; font-size: 16px; }
+  .text-classifier-intro { font-size: 13px; }
+  .text-classifier-actions .button { min-height: 45px; flex: 1 0 auto; }
+  .text-classifier-privacy, .text-classifier-limitation { padding: 16px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }

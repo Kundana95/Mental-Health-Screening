@@ -162,9 +162,9 @@ class TestDepressionAssessmentApi(unittest.TestCase):
         self.assertNotIn("private-answer-sentinel", response.text)
         self.assertNotIn("private-answer-sentinel", "\n".join(captured_logs.output))
 
-    def test_only_the_submission_route_is_exposed(self):
-        paths = [route.path for route in app.routes]
-        self.assertEqual(paths, ["/api/depression/submit"])
+    def test_only_the_expected_routes_are_exposed(self):
+        paths = list(app.openapi()["paths"])
+        self.assertEqual(paths, ["/api/depression/submit", "/api/schizophrenia/analyze"])
 
     def test_untrusted_host_is_rejected(self):
         response = self.client.get(

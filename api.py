@@ -10,6 +10,7 @@ from modules.assessment_result import (
     build_unified_assessment_result,
     validate_unified_assessment_submission,
 )
+from modules.schizophrenia.api import router as schizophrenia_router
 
 
 class DepressionAssessmentRequest(BaseModel):
@@ -68,6 +69,11 @@ async def limit_request_body(request: Request, call_next):
 @app.exception_handler(RequestValidationError)
 async def safe_validation_error(request: Request, error: RequestValidationError):
     """Avoid echoing submitted values from framework validation errors."""
+    if request.url.path == "/api/schizophrenia/analyze":
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Invalid text submission. Provide non-empty text of at most 4000 characters."},
+        )
     return JSONResponse(
         status_code=422,
         content={"detail": "Invalid assessment submission. Please review your answers."},
@@ -108,3 +114,6 @@ def submit_depression_assessment(payload: DepressionAssessmentRequest):
         ) from None
 
     return {"status": "received", "message": "Your responses were received."}
+
+
+app.include_router(schizophrenia_router)

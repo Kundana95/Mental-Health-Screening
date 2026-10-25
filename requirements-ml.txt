@@ -1,0 +1,10 @@
+# Inference environment verified on Python 3.13. Original NumPy/SciPy/joblib
+# versions were not exported; these compatible versions are checked by parity tests.
+-r requirements-api-test.txt
+gensim==4.4.0
+scikit-learn==1.6.1
+numpy==2.2.6
+scipy==1.15.3
+joblib==1.5.3
+smart_open==7.3.0.post1
+threadpoolctl==3.6.0
