@@ -19,6 +19,12 @@ export default function AnxietyAssessment() {
     setError(null);
   }
 
+  function retakeScreening() {
+    setResponses(Array(7).fill(null));
+    setResult(null);
+    setError(null);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     if (isSubmitting) return;
@@ -44,18 +50,13 @@ export default function AnxietyAssessment() {
   return (
     <main className="assessment-page container">
       <Link className="text-classifier-back" to="/">← Back to home</Link>
-      <header className="assessment-heading">
-        <p className="eyebrow">THE STUDENT EXPERIENCE</p>
+      {!result && <header className="assessment-heading">
         <h1>Anxiety Screening</h1>
-        <p>This is an experimental screening estimate, not a clinical diagnosis.</p>
-      </header>
+        <p className="screening-quote">“Take a breath. You don't have to figure everything out at once.”</p>
+        <p>This experimental screening estimate is not a diagnosis and cannot replace professional assessment. For concerns, speak with a qualified mental-health professional.</p>
+      </header>}
 
-      <aside className="text-classifier-notice anxiety-notice">
-        <h2>A model-based estimate</h2>
-        <p>This prototype uses a trained model and these seven academic-context questions. It has not been established as a clinical assessment and cannot diagnose or rule out an anxiety disorder. For concerns, seek a qualified mental-health professional.</p>
-      </aside>
-
-      <form className="assessment-form" onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
+      {!result && <form className="assessment-form" onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
         {ANXIETY_QUESTIONS.map((question, index) => (
           <fieldset className="assessment-question" key={question.trim()}>
             <legend>{question.trim()}</legend>
@@ -82,14 +83,17 @@ export default function AnxietyAssessment() {
           </button>
           <span className="assessment-submit-note">Your answers are used for this request only.</span>
         </div>
-      </form>
+      </form>}
 
       {error && <p className="assessment-message assessment-message--error" role="alert">{error.message}</p>}
       {result && (
-        <section className="anxiety-result" role="status" aria-labelledby="anxiety-result-heading">
-          <p className="eyebrow">EXPERIMENTAL MODEL ESTIMATE</p>
-          <h2 id="anxiety-result-heading">{result.category}</h2>
-          <p>This is an experimental estimate, not a diagnosis. A result cannot establish or rule out an anxiety disorder.</p>
+        <section className="screening-results" aria-labelledby="anxiety-result-heading">
+          <h2 id="anxiety-result-heading">Screening Results</h2>
+          <article className="screening-result-card" role="status">
+            <h3>{result.category}</h3>
+          </article>
+          <p className="screening-results__disclaimer">This experimental result is not a diagnosis and cannot establish or rule out an anxiety disorder. Seek professional assessment for concerns.</p>
+          <button className="button button--outline screening-results__retake" type="button" onClick={retakeScreening}>Retake Screening</button>
         </section>
       )}
     </main>

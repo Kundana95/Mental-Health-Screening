@@ -1,8 +1,8 @@
 export const MAX_TEXT_LENGTH = 4000;
 
 export const CLASSIFICATION_COPY = Object.freeze({
-  schizophrenia_community: 'Text resembles the schizophrenia-related Reddit category.',
-  general_community: 'Text resembles the general Reddit category.',
+  schizophrenia_community: 'Text resembles schizophrenia.',
+  general_community: 'Text does not resemble schizophrenia.',
 });
 
 export class TextAnalysisError extends Error {

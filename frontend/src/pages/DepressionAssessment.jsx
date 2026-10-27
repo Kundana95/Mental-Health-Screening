@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from '../components/SiteLink.jsx';
 import { submitDepressionAssessment } from '../lib/depression.js';
 
 const phq9Questions = [
@@ -99,6 +100,16 @@ export default function DepressionAssessment() {
     setResults(null);
   }
 
+  function retakeScreening() {
+    setPhq9Responses(Array(9).fill(null));
+    setGad7Responses(Array(7).fill(null));
+    setContextAnswers({});
+    setError('');
+    setSubmitted(false);
+    setShowSafetyGuidance(false);
+    setResults(null);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     if (!isComplete || requestInFlight.current) return;
@@ -132,13 +143,15 @@ export default function DepressionAssessment() {
   let questionNumber = 0;
   return (
     <main className="assessment-page container">
-      <header className="assessment-heading">
+      <Link className="text-classifier-back" to="/">← Back to home</Link>
+      {!submitted && <header className="assessment-heading">
         <p className="eyebrow">A THOUGHTFUL SPACE TO CHECK IN</p>
         <h1>Depression Screening</h1>
+        <p className="screening-quote">“You don't have to be okay all the time. Give yourself the same kindness you give others.”</p>
         <p>This is a screening tool, not a diagnosis.</p>
-      </header>
+      </header>}
 
-      <form className="assessment-form" onSubmit={handleSubmit}>
+      {!submitted && <form className="assessment-form" onSubmit={handleSubmit}>
         {phq9Questions.map((question, index) => {
           questionNumber += 1;
           return (
@@ -191,34 +204,34 @@ export default function DepressionAssessment() {
           </button>
           <span className="assessment-submit-note">Your answers are used for this assessment only.</span>
         </div>
-      </form>
+      </form>}
 
       {error && <p className="assessment-message assessment-message--error" role="alert">{error}</p>}
-      {submitted && <p className="assessment-message assessment-message--success" role="status">Your responses were received.</p>}
       {submitted && results && (
-        <section className="depression-results" aria-labelledby="depression-results-heading">
-          <h2 id="depression-results-heading">Screening results</h2>
-          <p className="depression-results__note">These are screening results, not a clinical diagnosis.</p>
-          <div className="depression-results__grid">
-            <article className="depression-result-card">
+        <section className="screening-results" aria-labelledby="depression-results-heading">
+          <h2 id="depression-results-heading">Screening Results</h2>
+          <div className="screening-results__grid">
+            <article className="screening-result-card">
               <h3>PHQ-9</h3>
-              <p className="depression-result-card__score">{results['PHQ-9'].total_score}<span> / 27</span></p>
+              <p className="screening-result-card__value">{results['PHQ-9'].total_score}<span> / 27</span></p>
               <p>Interpretation: <strong>{results['PHQ-9'].severity}</strong></p>
             </article>
-            <article className="depression-result-card">
+            <article className="screening-result-card">
               <h3>GAD-7</h3>
-              <p className="depression-result-card__score">{results['GAD-7'].total_score}<span> / 21</span></p>
+              <p className="screening-result-card__value">{results['GAD-7'].total_score}<span> / 21</span></p>
               <p>Interpretation: <strong>{results['GAD-7'].severity}</strong></p>
             </article>
           </div>
+          <p className="screening-results__disclaimer">PHQ-9 and GAD-7 are screening results, not a clinical diagnosis.</p>
+          {showSafetyGuidance && (
+            <aside className="assessment-message assessment-message--safety" role="alert">
+              <h2>Support is available</h2>
+              <p>You do not have to manage difficult thoughts on your own. If you might act on thoughts of harming yourself or cannot stay safe, call <a href="tel:112">112 in India</a> or go to the nearest hospital now.</p>
+              <p>For free, 24/7 mental-health support in India, contact Tele-MANAS at <a href="tel:14416">14416</a> or <a href="tel:18008914416">1-800-891-4416</a>. You may also reach out to someone you trust or a mental-health professional.</p>
+            </aside>
+          )}
+          <button className="button button--outline screening-results__retake" type="button" onClick={retakeScreening}>Retake Screening</button>
         </section>
-      )}
-      {submitted && showSafetyGuidance && (
-        <aside className="assessment-message assessment-message--safety" role="alert">
-          <h2>Support is available</h2>
-          <p>You do not have to manage difficult thoughts on your own. If you might act on thoughts of harming yourself or cannot stay safe, call <a href="tel:112">112 in India</a> or go to the nearest hospital now.</p>
-          <p>For free, 24/7 mental-health support in India, contact Tele-MANAS at <a href="tel:14416">14416</a> or <a href="tel:18008914416">1-800-891-4416</a>. You may also reach out to someone you trust or a mental-health professional.</p>
-        </aside>
       )}
     </main>
   );

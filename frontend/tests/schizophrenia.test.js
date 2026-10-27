@@ -1,6 +1,25 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 import { analyzeText, CLASSIFICATION_COPY, validateText } from '../src/lib/schizophrenia.js';
+
+test('shows the requested message for each existing classification', () => {
+  assert.equal(CLASSIFICATION_COPY.schizophrenia_community, 'Text resembles schizophrenia.');
+  assert.equal(CLASSIFICATION_COPY.general_community, 'Text does not resemble schizophrenia.');
+});
+
+test('keeps the text form visible above the inline result and resets it on retake', async () => {
+  const page = await readFile(new URL('../src/pages/SchizophreniaAssessment.jsx', import.meta.url), 'utf8');
+  const formStart = page.indexOf('<form className="assessment-form text-classifier-form"');
+  const formEnd = page.indexOf('</form>', formStart);
+  const resultStart = page.indexOf('{result && <section className="screening-results"', formEnd);
+
+  assert.ok(formStart >= 0, 'the text form should be rendered');
+  assert.ok(formEnd > formStart, 'the form should stay mounted rather than being replaced');
+  assert.ok(resultStart > formEnd, 'the result should follow the input form inline');
+  assert.match(page, /value=\{text\}/, 'the submitted text should remain visible in the input');
+  assert.match(page, /function retakeScreening\(\)\s*\{\s*setText\(''\);\s*setResult\(null\);/, 'retake should clear both the text and result');
+});
 
 test('blank and over-limit text are rejected, using Python-compatible Unicode character counts', () => {
   for (const text of ['', ' \n\t', null, 42]) assert.ok(validateText(text));

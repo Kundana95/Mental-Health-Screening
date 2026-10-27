@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import AbstractIllustration from '../components/AbstractIllustration.jsx';
 import { Link } from '../components/SiteLink.jsx';
 import { analyzeText, CLASSIFICATION_COPY, MAX_TEXT_LENGTH, validateText } from '../lib/schizophrenia.js';
 
@@ -33,6 +32,12 @@ export default function SchizophreniaAssessment() {
     setResult(null);
     setError(null);
     textarea.current?.focus();
+  }
+
+  function retakeScreening() {
+    setText('');
+    setResult(null);
+    setError(null);
   }
 
   async function handleSubmit(event) {
@@ -74,27 +79,21 @@ export default function SchizophreniaAssessment() {
   }
 
   return (
-    <main className="text-classifier-page container">
+    <main className="assessment-page text-classifier-page container">
       <Link className="text-classifier-back" to="/">← Back to home</Link>
-      <header className="text-classifier-heading">
-        <div>
-          <p className="eyebrow">A SPACE FOR YOUR OWN WORDS</p>
-          <h1>Schizophrenia-related text classifier</h1>
-          <p>Explore how a paragraph is categorized by a model trained on Reddit posts.</p>
-          <span className="pill">Experimental · Educational project</span>
-        </div>
-        <AbstractIllustration tone="sage" compact />
+      <header className="assessment-heading">
+        <p className="eyebrow">A THOUGHTFUL SPACE TO CHECK IN</p>
+        <h1>Schizophrenia-related Text Screening</h1>
+        <p className="screening-quote">“Your experiences deserve to be heard with care and understanding.”</p>
       </header>
 
       <div className="text-classifier-layout">
         <div className="text-classifier-main">
           <aside className="text-classifier-notice">
-            <h2>Your words are more than a classification</h2>
-            <p>This is an experimental Reddit text classifier, not a clinical assessment or diagnosis. A category cannot establish or rule out schizophrenia.</p>
+            <p>This experimental text screening is not a clinical assessment or diagnosis. A category cannot establish or rule out schizophrenia. For concerns, speak with a qualified mental-health professional.</p>
           </aside>
 
           <form className="assessment-form text-classifier-form" onSubmit={handleSubmit} noValidate aria-busy={isAnalyzing}>
-            <p className="eyebrow">AN OPEN SPACE</p>
             <h2>What would you like to share?</h2>
             <p className="text-classifier-intro">Enter a paragraph in your own words. Share only what you feel comfortable sending for analysis.</p>
             <label htmlFor="schizophrenia-text">Your paragraph</label>
@@ -116,7 +115,7 @@ export default function SchizophreniaAssessment() {
               {characterCount.toLocaleString('en-US')} / 4,000 characters
             </p>
             <div className="text-classifier-privacy" id="text-privacy">
-              <h3>Before you write</h3>
+              <h3>Privacy</h3>
               <p>Your text is sent to the analysis service when you select Analyze Text. It stays in this page’s memory until you clear it or leave. Mindful does not save it in browser storage or retain submissions in the backend. Avoid names, contact details, and other identifying information.</p>
             </div>
             <div className="text-classifier-actions">
@@ -137,32 +136,16 @@ export default function SchizophreniaAssessment() {
             </div>
           )}
 
-          <section className={`text-classifier-result${result ? ' text-classifier-result--ready' : ''}`} aria-labelledby="text-result-heading" ref={resultPanel} tabIndex={-1}>
-            <p className="eyebrow">{result ? 'TEXT ANALYSIS COMPLETE' : 'YOUR TEXT CLASSIFICATION'}</p>
-            <h2 id="text-result-heading">{result ? 'A category for the text' : 'A space for your result'}</h2>
-            <div role="status" aria-live="polite" aria-atomic="true">
-              {result && <p className="text-classifier-category">{CLASSIFICATION_COPY[result.category]}</p>}
-            </div>
-            {!result && <p>Your Reddit text category will appear here after analysis.</p>}
-            {result && (
-              <>
-                <p>This describes a pattern learned from Reddit community posts. It does not determine whether you have a mental-health condition.</p>
-                <p className="text-classifier-next-step">If you are concerned about your experiences, consider talking with a qualified mental-health professional.</p>
-              </>
-            )}
-          </section>
+          {result && <section className="screening-results" aria-labelledby="text-result-heading" ref={resultPanel} tabIndex={-1}>
+            <h2 id="text-result-heading">Screening Results</h2>
+            <article className="screening-result-card" role="status" aria-live="polite" aria-atomic="true">
+              <h3>{CLASSIFICATION_COPY[result.category]}</h3>
+            </article>
+            <p className="screening-results__disclaimer">This experimental text classification is not a clinical diagnosis and does not determine whether you have a mental-health condition. Seek professional assessment for concerns.</p>
+            <button className="button button--outline screening-results__retake" type="button" onClick={retakeScreening}>Retake Screening</button>
+          </section>}
         </div>
 
-        <aside className="text-classifier-reminder">
-          <p className="eyebrow">BEFORE YOU BEGIN</p>
-          <h2>A gentle reminder</h2>
-          <p>You do not have to share everything. Take your time, and pause whenever you need to.</p>
-          <hr />
-          <h3>What the model learned</h3>
-          <p>It compares language patterns from schizophrenia-related and general Reddit communities. These community labels are not verified diagnoses.</p>
-          <p>Anxiety and addiction topics can be confused with the schizophrenia-related category.</p>
-          <Link className="text-classifier-resource" to="/#resources">Explore support resources ↗</Link>
-        </aside>
       </div>
     </main>
   );
